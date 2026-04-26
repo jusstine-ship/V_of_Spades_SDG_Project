@@ -17,13 +17,48 @@ int FoodManager::generateNextId() const {
 }
 
 bool FoodManager::loadFromFile(const string& filename) {
-    // TODO Malabanan: open file, parse lines, create FoodItem objects.
-    return false;
+    ifstream file(filename); 
+    if (!file.is_open()) {
+        return false; 
+    }
+
+    foods.clear();
+    string line;
+
+    while (getline(file, line)) {
+        stringstream ss(line);
+        string token;
+
+        int id, price;
+        string name, weather, budget, location, description;
+
+        
+        getline(ss, token, '|'); id = stoi(token);
+        getline(ss, name, '|');
+        getline(ss, weather, '|');
+        getline(ss, budget, '|');
+        getline(ss, token, '|'); price = stoi(token);
+        getline(ss, location, '|');
+        getline(ss, description);
+
+    
+        foods.push_back(FoodItem(id, name, weather, budget, price, location, description));
+    }
+
+    file.close();
 }
 
 bool FoodManager::saveToFile(const string& filename) const {
-    // TODO Malabanan: write all foods to file using toFileString().
-    return false;
+    ofstream file(filename); 
+    if (!file.is_open()) {
+        return false; 
+
+    for (const auto& food : foods) {
+        file << food.toFileString() << endl;
+    }
+
+    file.close();
+    return true;
 }
 
 void FoodManager::viewAllFoods() const {
